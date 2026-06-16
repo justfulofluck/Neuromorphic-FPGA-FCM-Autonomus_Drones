@@ -36,8 +36,9 @@ def train_vision_snn(config):
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=config['vision_snn']['lr'],
                                  weight_decay=config['vision_snn']['weight_decay'])
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-        optimizer, T_max=config['vision_snn']['epochs']
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, mode='min', factor=config['vision_snn']['lr_factor'],
+        patience=config['vision_snn']['lr_patience'], min_lr=1e-6,
     )
     stopper = EarlyStopping(patience=5)
 
@@ -73,7 +74,7 @@ def train_vision_snn(config):
                 loss = criterion(ego_pred, ego_gt)
                 val_loss.update(loss.item(), events.size(0))
 
-        scheduler.step()
+        scheduler.step(val_loss.avg)
         train_losses.append(train_loss.avg)
         val_losses.append(val_loss.avg)
 

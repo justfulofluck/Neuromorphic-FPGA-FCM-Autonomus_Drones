@@ -15,8 +15,8 @@ def generate_event_sequence(ego_motion, H=64, W=64, T=10, contrast_threshold=0.0
         indexing='ij',
     )
 
-    u = -vx * 2.0 + vz * x * 0.03 + wx * x * y * 0.02 - wy * (1.0 + x ** 2 * 0.02) + wz * y * 0.5
-    v = -vy * 2.0 + vz * y * 0.03 + wx * (1.0 + y ** 2 * 0.02) - wy * x * y * 0.02 - wz * x * 0.5
+    u = -vx * 2.0 + vz * x * 0.1 + wx * x * y * 0.02 - wy * (1.0 + x ** 2 * 0.02) + wz * y * 0.5
+    v = -vy * 2.0 + vz * y * 0.1 + wx * (1.0 + y ** 2 * 0.02) - wy * x * y * 0.02 - wz * x * 0.5
 
     u = u.clamp(-4, 4)
     v = v.clamp(-4, 4)

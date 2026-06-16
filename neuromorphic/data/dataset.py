@@ -12,7 +12,7 @@ class SNNDataset(Dataset):
         for _ in range(num_samples):
             ego = generate_random_ego_motion()
             ev = generate_event_sequence(ego, H, W, T)
-            pwm = (ego[:4] * 0.3 + 0.5 + torch.randn(4) * 0.1).clamp(0, 1)
+            pwm = (ego[:4] * 0.3 + 0.5 + torch.randn(4) * 0.05).clamp(0, 1)
             self.events.append(ev)
             self.ego_motions.append(ego)
             self.pwms.append(pwm)

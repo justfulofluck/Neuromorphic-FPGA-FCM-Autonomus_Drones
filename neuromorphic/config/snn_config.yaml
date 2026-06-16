@@ -6,8 +6,10 @@ vision_snn:
   time_steps: 10
   batch_size: 16
   lr: 0.001
-  epochs: 30
+  epochs: 50
   weight_decay: 0.0001
+  lr_patience: 3
+  lr_factor: 0.5
 
 control_snn:
   input_dim: 6
@@ -15,10 +17,10 @@ control_snn:
   output_dim: 4
   beta: 0.80
   threshold: 0.1
-  time_steps: 10
+  time_steps: 20
   batch_size: 16
   lr: 0.001
-  epochs: 15
+  epochs: 30
   spike_reg_lambda: 0.0
 
 data:

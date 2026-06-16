@@ -40,7 +40,7 @@ def train_control_snn(config):
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
         optimizer, T_max=config['control_snn']['epochs']
     )
-    stopper = EarlyStopping(patience=8)
+    stopper = EarlyStopping(patience=10)
 
     train_losses, val_losses, spike_rates = [], [], []
 
