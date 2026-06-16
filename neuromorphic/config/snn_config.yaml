@@ -1,0 +1,30 @@
+vision_snn:
+  input_shape: [10, 2, 64, 64]
+  conv_channels: [32, 64, 128]
+  fc_hidden: 256
+  output_dim: 6
+  time_steps: 10
+  batch_size: 16
+  lr: 0.001
+  epochs: 30
+  weight_decay: 0.0001
+
+control_snn:
+  input_dim: 6
+  hidden_dims: [64, 32]
+  output_dim: 4
+  beta: 0.80
+  threshold: 0.1
+  time_steps: 10
+  batch_size: 16
+  lr: 0.001
+  epochs: 15
+  spike_reg_lambda: 0.0
+
+data:
+  num_samples: 5000
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  event_resolution: [64, 64]
+  time_window_ms: 10
