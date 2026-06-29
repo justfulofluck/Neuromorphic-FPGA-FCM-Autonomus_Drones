@@ -32,3 +32,11 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Specific files to ignore
+DAY2_SNN_DESIGN_PLAN.md
+I need to work on this project from scratch since.md
+
+# FPGA simulation generated files
+*.vcd
+*.vvp
