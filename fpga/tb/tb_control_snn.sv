@@ -5,7 +5,7 @@ module tb_control_snn;
     localparam TIME_STEPS = 20;
     localparam MAX_WAIT   = 5000;
 
-    logic clk, rst_n;
+    logic clk = 0, rst_n = 0;
     logic valid_in;
     logic signed [15:0] ego_in [5:0];
     logic ready_out;
@@ -41,14 +41,14 @@ module tb_control_snn;
         ego_in[5] = 16'sd0000;
 
         @(posedge clk);
-        rst_n = 1;
+        #1 rst_n = 1;
         @(posedge clk);
 
         for (int t = 0; t < TIME_STEPS; t++) begin
             @(posedge clk);
-            valid_in = 1;
+            #1 valid_in = 1;
             @(posedge clk);
-            valid_in = 0;
+            #1 valid_in = 0;
 
             wait_cycles = 0;
             while (!ready_out && wait_cycles < MAX_WAIT) begin
@@ -63,12 +63,17 @@ module tb_control_snn;
 
             @(posedge clk);
 
-            for (int i = 0; i < 4; i++)
-                if (pwm_out[i] > 16'sd0) spike_count[i] = spike_count[i] + 1;
+            $display("  SPIKE[0]=%b, CURR[0]=%0d, CURR[1]=%0d",
+                dut.l1_spike[0], dut.l1_current[0], dut.l1_current[1]);
+
+            if (dut.l3_spike[0]) spike_count[0] = spike_count[0] + 1;
+            if (dut.l3_spike[1]) spike_count[1] = spike_count[1] + 1;
+            if (dut.l3_spike[2]) spike_count[2] = spike_count[2] + 1;
+            if (dut.l3_spike[3]) spike_count[3] = spike_count[3] + 1;
 
             $display("  t=%0d: wait=%0d, ready=1, PWM=[%0d %0d %0d %0d]",
                 t, wait_cycles,
-                pwm_out[0], pwm_out[1], pwm_out[2], pwm_out[3]);
+                dut.pwm_q0, dut.pwm_q1, dut.pwm_q2, dut.pwm_q3);
         end
 
         $display("");

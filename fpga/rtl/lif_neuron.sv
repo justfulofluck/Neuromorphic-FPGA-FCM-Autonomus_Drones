@@ -11,8 +11,9 @@ module lif_neuron #(
     output logic signed [15:0]       mem_out      // Q4.11
 );
 
-    logic signed [15:0] mem_q, mem_d;
-    logic spike_d;
+    logic signed [15:0] mem_q = '0;  // explicit init: avoid X at power-on
+    logic signed [15:0] mem_d;
+    logic spike_d = 1'b0;           // explicit init: avoid X at power-on
 
     // Combinational: LIF update
     always_comb begin
@@ -30,16 +31,8 @@ module lif_neuron #(
         if (mem_d > 16'sd32767) mem_d = 16'sd32767;
         if (mem_d < -16'sd32768) mem_d = -16'sd32768;
 
-        // Spike generation
+        // Spike generation (no membrane reset — matches snn.Leaky reset_delay=True)
         spike_d = (mem_d >= THRESH_Q);
-
-        // Reset after spike
-        if (spike_d) begin
-            if (RESET_ZERO)
-                mem_d = '0;
-            else
-                mem_d = mem_d - THRESH_Q;
-        end
     end
 
     // Sequential
@@ -50,9 +43,8 @@ module lif_neuron #(
         end else if (valid_in) begin
             mem_q     <= mem_d;
             spike_out <= spike_d;
-        end else begin
-            spike_out <= 1'b0;
         end
+        // Note: spike_out persists until next valid_in (rate-coded readout)
     end
 
     assign mem_out = mem_q;

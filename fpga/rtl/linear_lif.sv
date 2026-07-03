@@ -11,7 +11,7 @@ module linear_lif #(
     input  logic                      rst_n,
     input  logic                      valid_in,
     input  logic signed [15:0]        x_in   [IN_FEATURES-1:0],  // Q4.11
-    output logic                      spike_out [OUT_FEATURES-1:0],
+    output logic [OUT_FEATURES-1:0]   spike_out,
     output logic signed [15:0]        mem_out [OUT_FEATURES-1:0],
     output logic                      valid_out
 );
@@ -41,11 +41,17 @@ module linear_lif #(
 
     // MAC state machine
     typedef enum logic [1:0] {IDLE, MAC, DONE} state_t;
-    state_t state;
+    state_t state = IDLE;
 
-    logic [$clog2(IN_FEATURES):0] mac_idx;
+    logic [$clog2(IN_FEATURES):0] mac_idx = 0;
     logic signed [31:0] acc [OUT_FEATURES-1:0];
     logic signed [15:0] current [OUT_FEATURES-1:0];
+    
+    // Explicit init for iverilog: clear acc at power-on
+    initial begin
+        for (int j = 0; j < OUT_FEATURES; j++)
+            acc[j] = 0;
+    end
 
     // LIF neuron instances
     genvar i;
@@ -69,7 +75,7 @@ module linear_lif #(
     // Combinational: current from acc + bias
     always_comb begin
         for (int j = 0; j < OUT_FEATURES; j++)
-            current[j] = (acc[j] + bias_mem[j]) >>> 11;
+            current[j] = (acc[j] >>> 11) + bias_mem[j];
     end
 
     // MAC state machine

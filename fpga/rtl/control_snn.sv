@@ -6,25 +6,25 @@ module control_snn #(
     input  logic                     valid_in,
     input  logic signed [15:0]       ego_in [5:0],    // 6 inputs (Q4.11)
     output logic                     ready_out,
-    output logic signed [15:0]       pwm_out [3:0]    // 4 PWM outputs (Q4.11)
+    output             signed [15:0] pwm_out [3:0]    // 4 PWM outputs (Q4.11)
 );
 
     // Layer 1: 6 -> 64
-    logic        l1_spike [63:0];
+    logic [63:0]   l1_spike;
     logic signed [15:0] l1_mem [63:0];
     logic signed [15:0] l1_current [63:0];
     logic        l1_valid_out;
     logic        l1_valid_in;
 
     // Layer 2: 64 -> 32
-    logic        l2_spike [31:0];
+    logic [31:0]   l2_spike;
     logic signed [15:0] l2_mem [31:0];
     logic signed [15:0] l2_current [31:0];
     logic        l2_valid_out;
     logic        l2_valid_in;
 
     // Layer 3: 32 -> 4
-    logic        l3_spike [3:0];
+    logic [3:0]    l3_spike;
     logic signed [15:0] l3_mem [3:0];
     logic signed [15:0] l3_current [3:0];
     logic        l3_valid_out;
@@ -32,7 +32,8 @@ module control_snn #(
 
     // Sequencing controller
     typedef enum logic [2:0] {WAIT, RUN_L1, RUN_L2, RUN_L3, PWM_DONE} ctrl_state_t;
-    ctrl_state_t ctrl_state, ctrl_next;
+    ctrl_state_t ctrl_state = WAIT;
+    ctrl_state_t ctrl_next;
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n)
@@ -54,7 +55,10 @@ module control_snn #(
 
     // Edge-detect: pulse valid_in on entry to each RUN state
     logic [2:0] ctrl_d1;
-    always_ff @(posedge clk) ctrl_d1 <= ctrl_state;
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) ctrl_d1 <= '0;
+        else        ctrl_d1 <= ctrl_state;
+    end
 
     assign l1_valid_in = (ctrl_state == RUN_L1) && (ctrl_d1 != RUN_L1);
     assign l2_valid_in = l1_valid_out;
@@ -119,21 +123,23 @@ module control_snn #(
         .valid_out (l3_valid_out)
     );
 
-    // Rate-coded PWM decode
-    logic signed [15:0] pwm_acc [3:0];
-
-    initial begin
-        for (int i = 0; i < 4; i++) pwm_out[i] = 16'sd0;
-    end
+    logic signed [15:0] pwm_q0 = 0, pwm_q1 = 0, pwm_q2 = 0, pwm_q3 = 0;
+    assign pwm_out[0] = pwm_q0;
+    assign pwm_out[1] = pwm_q1;
+    assign pwm_out[2] = pwm_q2;
+    assign pwm_out[3] = pwm_q3;
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            for (int i = 0; i < 4; i++)
-                pwm_out[i] <= 16'sd0;
+            pwm_q0 <= 16'sd0;
+            pwm_q1 <= 16'sd0;
+            pwm_q2 <= 16'sd0;
+            pwm_q3 <= 16'sd0;
         end else if (l3_valid_out) begin
-            for (int i = 0; i < 4; i++)
-                if (l3_spike[i])
-                    pwm_out[i] <= pwm_out[i] + 16'sd102;
+            if (l3_spike[0]) pwm_q0 <= pwm_q0 + 16'sd102;
+            if (l3_spike[1]) pwm_q1 <= pwm_q1 + 16'sd102;
+            if (l3_spike[2]) pwm_q2 <= pwm_q2 + 16'sd102;
+            if (l3_spike[3]) pwm_q3 <= pwm_q3 + 16'sd102;
         end
     end
 
