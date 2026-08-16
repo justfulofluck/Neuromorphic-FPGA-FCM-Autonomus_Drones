@@ -23,11 +23,11 @@ Har entry: **paper → hardware → task → key metrics → SNN method**. Ye ta
 | **Isik (Survey)** | 2023 | Various | Survey (rate coding, LIF, time-mux) | MLP/CNN/LSTM/SNN | Review | Trends + gaps |
 | **Robust open-source SNN on low-end FPGA** | 2025 | Low-end (13K LUT) | MNIST 784-128-10 | IF neurons | snnTorch → quantize → RTL | 520 µs / 100 timesteps |
 | **SpikingJelly deployment** | 2023 | Various (Lava/NIR/Lynxi) | Vision, classification | Deep SNN | Surrogate gradient | Framework toolchain |
-| **Ours (proposed)** | 2025 | **FPGA (Vivado)** | **Drone control (PWM)** | **3-layer LIF, 6→64→32→4, Q4.11** | **Surrogate gradient (snnTorch)** | 20 timesteps, RTL verified |
+| **Ours (proposed)** | 2025 | **FPGA (Vivado)** | **UAV control (PWM)** | **3-layer LIF, 6→64→32→4, Q4.11** | **Surrogate gradient (snnTorch)** | 20 timesteps, RTL verified |
 
 **Key gap highlighted:** Existing FPGA-SNN works zyada tar **classification/vision** hain — **control output (continuous regression)** par FPGA-SNN ka kaam kam hai. Hum isi gap me hain.
 
-## 3. SNN-Based Drone / Control Systems
+## 3. SNN-Based UAV / Control Systems
 
 | Work | Year | Hardware | Task | SNN Architecture | Training | Result |
 |------|------|----------|------|-----------------|----------|--------|
@@ -37,7 +37,7 @@ Har entry: **paper → hardware → task → key metrics → SNN method**. Ye ta
 | **Paredes-Vallés et al.** | 2024 | **Loihi** (onboard) | Full vision-to-control flight | 5-layer vision + control | Self-supervised + evolutionary | 200 Hz, **27 µJ/inference**, real flight |
 | **Xu et al.** (ANN→SNN control) | 2026 | Simulation | Continuous control analysis | Converted SNN | Conversion | Shows conversion fails in continuous control |
 | **Mengozzi et al.** | 2025 | Simulation | Quadrotor agile flight | PPO-trained SNN | RL (PPO) | +2.5% success, +40% speed |
-| **Ours** | 2025 | **FPGA** | **Drone control (4 PWM)** | **3-layer LIF, Q4.11, inference-only** | **Surrogate gradient** | RTL sim verified |
+| **Ours** | 2025 | **FPGA** | **UAV control (4 PWM: aileron/elevator/rudder/throttle)** | **3-layer LIF, Q4.11, inference-only** | **Surrogate gradient** | RTL sim verified |
 
 ## 4. Our Positioning Summary
 
@@ -52,4 +52,4 @@ Har entry: **paper → hardware → task → key metrics → SNN method**. Ye ta
 
 ## 5. Research Gap (Final Statement)
 
-> FPGA par SNN implementation zyada tar **perception/classification** tasks ke liye hai; **SNN-based continuous control** (PWM/motor commands) — especially **FPGA-deployed** — kafi kam explore hua hai. Neuromorphic drone control (TU Delft) Loihi jaise ASIC chips pe hai, jo cost/access me limited hain. **Ye thesis ek surrogate-gradient trained, Q4.11 quantized, FPGA-deployed LIF control SNN propose karta hai jo drone control output (PWM) ko rate-coded spikes se generate karta hai — control domain me FPGA-SNN ka ek naya use-case.**
+> FPGA par SNN implementation zyada tar **perception/classification** tasks ke liye hai; **SNN-based continuous control** (PWM/actuator commands) — especially **FPGA-deployed** — kafi kam explore hua hai. Neuromorphic UAV/drone control (TU Delft) Loihi jaise ASIC chips pe hai, jo cost/access me limited hain. **Ye thesis ek surrogate-gradient trained, Q4.11 quantized, FPGA-deployed LIF control SNN propose karta hai jo UAV control output (4 PWM: aileron/elevator/rudder/throttle) ko rate-coded spikes se generate karta hai — control domain me FPGA-SNN ka ek naya use-case.**

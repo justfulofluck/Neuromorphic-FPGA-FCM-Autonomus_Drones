@@ -1,4 +1,4 @@
-# Literature Review — Neuromorphic FPGA Control for Autonomous Drones
+# Literature Review — FPGA-Based Event-Driven Neuromorphic Flight Controller for Autonomous UAVs
 
 MTech project ka literature review. Papers `papers/` folder me organized hain, summaries `summaries/` me, aur **submission-ready document `literature-review.md`** me.
 
@@ -16,9 +16,9 @@ MTech project ka literature review. Papers `papers/` folder me organized hain, s
 | 04 | `papers/04_spinnaker2.pdf` | SpiNNaker 2: A 10 Million Core Processor System (Mayr et al.) | 2019 | Neuromorphic hardware |
 | 05 | `papers/05_neuromorphic_survey.pdf` | A Survey of Neuromorphic Computing and Neural Networks in Hardware (Schuman et al.) | 2017 | Neuromorphic computing survey |
 | 06 | `papers/06_spikingjelly.pdf` | SpikingJelly: An open-source ML infrastructure for spike-based intelligence (Fang et al.) | 2023 | SNN frameworks |
-| 07 | `papers/07_neuromorphic_attitude.pdf` | Neuromorphic Attitude Estimation and Control (Stroobants et al., TU Delft) | 2024 | SNN drone control |
+| 07 | `papers/07_neuromorphic_attitude.pdf` | Neuromorphic Attitude Estimation and Control (Stroobants et al., TU Delft) | 2024 | SNN UAV control |
 | 08 | `papers/08_ann2snn_control.pdf` | Error Amplification Limits ANN-to-SNN Conversion in Continuous Control | 2026 | ANN→SNN control |
-| 09 | `papers/09_neuromorphic_drone_flight.pdf` | Fully Neuromorphic Vision and Control for Autonomous Drone Flight (Paredes-Vallés et al., TU Delft) | 2023/24 | SNN drone control |
+| 09 | `papers/09_neuromorphic_drone_flight.pdf` | Fully Neuromorphic Vision and Control for Autonomous Drone Flight (Paredes-Vallés et al., TU Delft) | 2023/24 | SNN UAV control |
 | 10 | `papers/10_loihi.pdf` | Loihi: A Neuromorphic Manycore Processor with On-Chip Learning (Davies et al.) | 2018 | Neuromorphic hardware |
 | 11 | `papers/11_truenorth.pdf` | A Million Spiking-Neuron Integrated Circuit (Merolla et al., IBM TrueNorth) | 2014 | Neuromorphic hardware |
 
@@ -29,7 +29,7 @@ MTech project ka literature review. Papers `papers/` folder me organized hain, s
 - **ANN→SNN conversion**: 03, 08
 - **Neuromorphic chips (ASIC)**: 10 (Loihi), 11 (TrueNorth), 04 (SpiNNaker2)
 - **FPGA implementations**: 01, 06 (deployment), 05
-- **Drone control with SNN**: 07, 09, 08
+- **UAV control with SNN**: 07, 09, 08
 - **Frameworks/tools**: 06 (SpikingJelly)
 
 ## Summaries
@@ -38,7 +38,7 @@ Har paper ka detailed summary `summaries/` me hai (01_*.md to 11_*.md) — Overv
 
 ## Comparative Table
 
-`comparative_table.md` — ASIC platforms, FPGA-SNN works, drone control systems ka comparison + research gap statement. Thesis LR ka key figure.
+`comparative_table.md` — ASIC platforms, FPGA-SNN works, UAV control systems ka comparison + research gap statement. Thesis LR ka key figure.
 
 ## Next Steps
 

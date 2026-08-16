@@ -1,8 +1,10 @@
-# Neuromorphic-FPGA-FCM: Autonomous Drone Flight Control
+# FPGA-Based Event-Driven Neuromorphic Flight Controller for Autonomous UAVs
 
-<b>Hybrid CNN+SNN</b> vision-to-control pipeline for autonomous drone flight, deployed to FPGA via SystemVerilog RTL.
+<b>Hybrid CNN+SNN</b> vision-to-control pipeline for autonomous fixed-wing UAV flight, deployed to FPGA via SystemVerilog RTL.
 
-<b>Architecture:</b> Event camera → Vision CNN (Conv2D) → 6-DoF ego-motion → Control SNN (3-layer LIF) → 4× PWM motor output
+<b>Architecture:</b> Event camera → Vision CNN (Conv2D) → 6-DoF ego-motion → Control SNN (3-layer LIF) → 4× PWM control-surface output
+
+> **Terminology:** "Event-driven" here means (1) an event-camera (DVS) vision front-end that produces asynchronous events, and (2) a spike-driven neuromorphic control network in which information is processed as discrete spike events rather than dense synchronous activations. The control network itself is rate-coded LIF; the pipeline as a whole is event-driven from the sensor side.
 
 ---
 
@@ -19,8 +21,11 @@ Control SNN (3 LinearLIF layers)
        ↓ 4× spike trains (rate-coded)
 PWM Decode (spike_count / time_steps)
        ↓
-4× PWM → Quadcopter motors
+4× PWM → Aileron / Elevator / Rudder / Throttle
 ```
+
+> **Control-surface mapping (fixed-wing UAV):** the four rate-coded PWM outputs are interpreted as actuator commands
+> `pwm[0]` = aileron (roll), `pwm[1]` = elevator (pitch), `pwm[2]` = rudder (yaw), `pwm[3]` = throttle (airspeed).
 
 ---
 
@@ -135,7 +140,7 @@ cd fpga && ./run_simulation.sh
 │   └── run_sim.tcl            # Vivado simulation script
 │
 ├── checkpoints/               # Trained model weights (.pt)
-├── PX4-Autopilot/             # PX4 drone firmware (for future integration)
+├── PX4-Autopilot/             # PX4 UAV firmware (future fixed-wing SITL)
 ├── project documents/         # Design notes
 └── README.md
 ```
@@ -172,12 +177,12 @@ pip install -r neuromorphic/requirements.txt
 sudo apt install iverilog gtkwave
 ```
 
-### Future: Drone Simulation
+### Future: UAV Simulation
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| PX4-Autopilot | ≥ 1.14 | Drone autopilot firmware |
-| Gazebo (gz-sim) | ≥ 8.0 | 3D drone simulator |
+| PX4-Autopilot | ≥ 1.14 | UAV autopilot firmware (fixed-wing SITL) |
+| Gazebo (gz-sim) | ≥ 8.0 | 3D UAV simulator (plane/plane_sih airframes) |
 | QGroundControl | ≥ 4.2 | Ground station (optional) |
 
 ---
