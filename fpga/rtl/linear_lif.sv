@@ -96,7 +96,6 @@ module linear_lif #(
                         mac_idx <= '0;
                         for (int j = 0; j < OUT_FEATURES; j++)
                             acc[j] <= '0;
-                        $display("  Layer %0d: MAC start, IN_FEATURES=%0d", OUT_FEATURES, IN_FEATURES);
                     end
                 end
                 MAC: begin
@@ -108,7 +107,6 @@ module linear_lif #(
                         state <= DONE;
                 end
                 DONE: begin
-                    $display("  Layer %0d: MAC done, current[0]=%0d", OUT_FEATURES, current[0]);
                     valid_out <= 1'b1;
                     state <= IDLE;
                 end
