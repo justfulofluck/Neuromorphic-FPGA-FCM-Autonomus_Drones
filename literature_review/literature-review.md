@@ -104,7 +104,13 @@ Neuromorphic computing holds particular promise for small autonomous UAVs, where
 - **Paredes-Vallés et al. [2024]** (Science Robotics) demonstrated the first fully neuromorphic vision-to-control pipeline for autonomous drone flight. A five-layer SNN (28.8k neurons) processing raw event-camera data, trained via self-supervised learning, was combined with an SNN control layer trained through an evolutionary algorithm. The complete pipeline ran onboard on Intel Loihi at 200 Hz, consuming only **27 µJ per inference**, and successfully achieved hovering, landing, and sideway maneuvering with sim-to-real transfer.
 - **Mengozzi et al. [2025]** showed that PPO-trained SNN policies for agile quadrotor flight achieve 2.5% higher success rate, 40% higher average flight speed, and 28.6% less time-to-target than ANN-based policies in simulation.
 
-These results establish the feasibility and energy-efficiency advantage of neuromorphic UAV control, but they rely on dedicated neuromorphic ASICs (predominantly Loihi) or software simulation. FPGA-deployed SNN controllers for low-level UAV control have not been systematically demonstrated.
+**Fixed-wing UAVs** present a distinct control problem: they cannot hover, require forward airspeed, and are driven by control surfaces (aileron, elevator, rudder) and throttle rather than rotor-speed commands. Neuromorphic control has so far been applied almost exclusively to multirotors, but a growing body of work addresses event-driven and vision-based control on fixed-wing platforms:
+
+- **Wüest et al. [2022]** (EPFL) combined GNSS and onboard vision on a fixed-wing platform, improving approach accuracy from 3.033 m (GNSS-only) to 0.283 m — on par with RTK GNSS — demonstrating that vision-based low-level control is viable on fixed-wing aircraft.
+- **Marchei [2024]** (Politecnico di Torino / EPFL LIS) and its journal extension **Jeger et al. [2026]** deployed an event camera on a fixed-wing aircraft (Bixler 3) for real-time optical-flow-based altitude estimation and autonomous landing. Handling up to 40 million events per second via sparse Lucas-Kanade flow with gyroscopic derotation and adaptive temporal slicing, the system achieves reliable altitude regulation and landing in both daylight and 30 lux low-light conditions — where a conventional camera fails.
+- **Coen et al. [2026]** report the first fixed-wing UAV testbed for in-flight event-camera data collection, demonstrating that event sensors retain feature visibility under high-dynamic-range conditions (e.g., flying into the sun) that overexpose frame cameras, and establishing a platform for aviation-specific autonomous perception research.
+
+These results validate the feasibility of event-driven perception for fixed-wing control, but the processing in every case runs on conventional embedded CPUs (Raspberry Pi class) executing classical computer-vision algorithms. No neuromorphic (spiking) control layer has been applied to fixed-wing UAVs, and none generates control-surface actuator commands from spikes on FPGA hardware. More broadly, existing neuromorphic UAV control relies on dedicated ASICs (predominantly Loihi) or software simulation; FPGA-deployed SNN controllers for low-level UAV control have not been systematically demonstrated.
 
 ## 7. Gap Analysis and Research Positioning
 
@@ -113,10 +119,11 @@ These results establish the feasibility and energy-efficiency advantage of neuro
 1. **Task domain**: FPGA-based SNN implementations overwhelmingly target classification and perception. Continuous control outputs — such as PWM actuator commands for flight controllers — are underexplored in the FPGA-SNN literature [Isik, 2023].
 2. **Training methodology**: ANN-to-SNN conversion, common in SNN deployment, is demonstrably unsuitable for continuous control due to error amplification [Xu et al., 2026], yet direct-training approaches for control remain sparse.
 3. **Hardware platform**: Neuromorphic UAV control has been demonstrated on Loihi and microcontrollers [Paredes-Vallés et al., 2024; Stroobants et al., 2024], but the affordable, reconfigurable FPGA alternative has not been systematically applied to this problem.
+4. **Fixed-wing platform gap**: Event-driven sensing on fixed-wing UAVs has been validated (Marchei, 2024; Jeger et al., 2026; Coen et al., 2026), yet all such pipelines process events with classical optical-flow algorithms on embedded CPUs. No prior work applies a spike-based control network — and none deploys such a controller on FPGA — to generate fixed-wing control-surface commands (aileron, elevator, rudder, throttle).
 
 ### 7.2 Positioning of This Thesis
 
-This thesis addresses the identified gaps by proposing a **surrogate-gradient-trained, fixed-point (Q4.11) quantized, FPGA-deployed LIF control network** for autonomous UAV control. The contributions are:
+This thesis addresses the identified gaps by proposing a **surrogate-gradient-trained, fixed-point (Q4.11) quantized, FPGA-deployed LIF control network** for autonomous fixed-wing UAV control. The contributions are:
 
 - A three-layer LIF control network (6→64→32→4) mapping 6-DoF optical-flow sensory inputs to four PWM control-surface commands (aileron, elevator, rudder, throttle) through rate-coded spike accumulation.
 - Direct surrogate-gradient training using snnTorch, justified by the demonstrated unsuitability of ANN-to-SNN conversion for continuous control.
@@ -147,3 +154,7 @@ This literature review surveyed SNN foundations, training methods, neuromorphic 
 14. Stagsted, R., et al. "Towards Neuromorphic Control: A Spiking Neural Network Based PID Controller for UAVs." *RSS*, 2020.
 15. Xu, Z., et al. "Error Amplification Limits ANN-to-SNN Conversion in Continuous Control." *arXiv:2601.21778*, 2026.
 16. "A Robust, Open-Source Framework for Spiking Neural Networks on Low-End FPGAs." *arXiv:2507.07284*, 2025.
+17. Coen, J., et al. "Development of a Fixed-Wing UAV Testbed for In-Flight Data Collection from an Event-Based Camera." 2026.
+18. Marchei, A. "Neuromorphic Vision for Autonomous Flight and Landing on a Winged Drone." *Master's Thesis, Politecnico di Torino*, 2024.
+19. Wüest, V., Ajanic, E., Müller, M., and Floreano, D. "Accurate Vision-based Flight with Fixed-Wing Drones." *IEEE/RSJ IROS*, 2022.
+20. Jeger, S., Marchei, A., Toumieh, C., and Floreano, D. "High-Speed Altitude Regulation with Neuromorphic Camera and Lightweight Embedded Computation." *Advanced Intelligent Systems*, 2026.

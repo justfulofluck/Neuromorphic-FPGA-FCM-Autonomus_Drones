@@ -124,7 +124,14 @@ Neuromorphic computing holds particular promise for small autonomous UAVs, where
     \item \textbf{Paredes-Vall\'es et al. \cite{Paredes2024}} (Science Robotics) demonstrated the first fully neuromorphic vision-to-control pipeline for autonomous drone flight. A five-layer SNN (28.8k neurons) processing raw event-camera data, trained via self-supervised learning, was combined with an SNN control layer trained through an evolutionary algorithm. The complete pipeline ran onboard on Intel Loihi at 200\,Hz, consuming only \textbf{27\,$\mu$J per inference}, and successfully achieved hovering, landing, and sideways maneuvering with sim-to-real transfer.
     \item \textbf{Mengozzi et al. \cite{Mengozzi2025}} showed that PPO-trained SNN policies for agile quadrotor flight achieve 2.5\% higher success rate, 40\% higher average flight speed, and 28.6\% less time-to-target than ANN-based policies in simulation.
 \end{itemize}
-These results establish the feasibility and energy-efficiency advantage of neuromorphic UAV control, but they rely on dedicated neuromorphic ASICs (predominantly Loihi) or software simulation. FPGA-deployed SNN controllers for low-level UAV control have not been systematically demonstrated.
+
+\textbf{Fixed-wing UAVs} present a distinct control problem: they cannot hover, require forward airspeed, and are driven by control surfaces (aileron, elevator, rudder) and throttle rather than rotor-speed commands. Neuromorphic control has so far been applied almost exclusively to multirotors, but a growing body of work addresses event-driven and vision-based control on fixed-wing platforms:
+\begin{itemize}
+    \item \textbf{W\"uest et al. \cite{Wuest2022}} (EPFL) combined GNSS and onboard vision on a fixed-wing platform, improving approach accuracy from 3.033\,m (GNSS-only) to 0.283\,m --- on par with RTK GNSS --- demonstrating that vision-based low-level control is viable on fixed-wing aircraft.
+    \item \textbf{Marchei \cite{Marchei2024}} (Politecnico di Torino / EPFL LIS) and its journal extension \textbf{Jeger et al. \cite{Jeger2026}} deployed an event camera on a fixed-wing aircraft (Bixler 3) for real-time optical-flow-based altitude estimation and autonomous landing. Handling up to 40 million events per second via sparse Lucas--Kanade flow with gyroscopic derotation and adaptive temporal slicing, the system achieves reliable altitude regulation and landing in both daylight and 30\,lux low-light conditions, where a conventional camera fails.
+    \item \textbf{Coen et al. \cite{Coen2026}} report the first fixed-wing UAV testbed for in-flight event-camera data collection, demonstrating that event sensors retain feature visibility under high-dynamic-range conditions (e.g., flying into the sun) that overexpose frame cameras, and establishing a platform for aviation-specific autonomous perception research.
+\end{itemize}
+These results validate the feasibility of event-driven perception for fixed-wing control, but the processing in every case runs on conventional embedded CPUs (Raspberry Pi class) executing classical computer-vision algorithms. No neuromorphic (spiking) control layer has been applied to fixed-wing UAVs, and none generates control-surface actuator commands from spikes on FPGA hardware. More broadly, existing neuromorphic UAV control relies on dedicated ASICs (predominantly Loihi) or software simulation; FPGA-deployed SNN controllers for low-level UAV control have not been systematically demonstrated.
 
 \section{Gap Analysis and Research Positioning}
 \label{sec:gap}
@@ -134,10 +141,11 @@ These results establish the feasibility and energy-efficiency advantage of neuro
     \item \textbf{Task domain}: FPGA-based SNN implementations overwhelmingly target classification and perception. Continuous control outputs---such as PWM actuator commands for flight controllers---are underexplored in the FPGA-SNN literature \cite{Isik2023}.
     \item \textbf{Training methodology}: ANN-to-SNN conversion, common in SNN deployment, is demonstrably unsuitable for continuous control due to error amplification \cite{Xu2026}, yet direct-training approaches for control remain sparse.
     \item \textbf{Hardware platform}: Neuromorphic UAV control has been demonstrated on Loihi and microcontrollers \cite{Paredes2024,Stroobants2025}, but the affordable, reconfigurable FPGA alternative has not been systematically applied to this problem.
+    \item \textbf{Fixed-wing platform gap}: Event-driven sensing on fixed-wing UAVs has been validated \cite{Marchei2024,Jeger2026,Coen2026}, yet all such pipelines process events with classical optical-flow algorithms on embedded CPUs. No prior work applies a spike-based control network---and none deploys such a controller on FPGA---to generate fixed-wing control-surface commands (aileron, elevator, rudder, throttle).
 \end{enumerate}
 
 \subsection{Positioning of This Thesis}
-This thesis addresses the identified gaps by proposing a \textbf{surrogate-gradient-trained, fixed-point (Q4.11) quantized, FPGA-deployed LIF control network} for autonomous UAV control. The contributions are:
+This thesis addresses the identified gaps by proposing a \textbf{surrogate-gradient-trained, fixed-point (Q4.11) quantized, FPGA-deployed LIF control network} for autonomous fixed-wing UAV control. The contributions are:
 \begin{itemize}
     \item A three-layer LIF control network (6$\rightarrow$64$\rightarrow$32$\rightarrow$4) mapping 6-DoF optical-flow sensory inputs to four PWM control-surface commands (aileron, elevator, rudder, throttle) through rate-coded spike accumulation.
     \item Direct surrogate-gradient training using snnTorch, justified by the demonstrated unsuitability of ANN-to-SNN conversion for continuous control.

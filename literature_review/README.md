@@ -21,6 +21,10 @@ MTech project ka literature review. Papers `papers/` folder me organized hain, s
 | 09 | `papers/09_neuromorphic_drone_flight.pdf` | Fully Neuromorphic Vision and Control for Autonomous Drone Flight (Paredes-Vallés et al., TU Delft) | 2023/24 | SNN UAV control |
 | 10 | `papers/10_loihi.pdf` | Loihi: A Neuromorphic Manycore Processor with On-Chip Learning (Davies et al.) | 2018 | Neuromorphic hardware |
 | 11 | `papers/11_truenorth.pdf` | A Million Spiking-Neuron Integrated Circuit (Merolla et al., IBM TrueNorth) | 2014 | Neuromorphic hardware |
+| 12 | *(PDF paywalled — cited only)* | High-Speed Altitude Regulation with Neuromorphic Camera and Lightweight Embedded Computation (Jeger et al., EPFL) | 2026 | Fixed-wing event-driven control |
+| 13 | `papers/13_fixedwing_uav_testbed_event_camera.pdf` | Development of a Fixed-Wing UAV Testbed for In-Flight Data Collection from an Event-Based Camera (Coen et al.) | 2026 | Fixed-wing event camera (first) |
+| 14 | `papers/14_fixedwing_vision_flight.pdf` | Accurate Vision-based Flight with Fixed-Wing Drones (Wüest et al., EPFL) | 2022 | Fixed-wing vision control |
+| 15 | `papers/15_winged_drone_neuromorphic_landing.pdf` | Neuromorphic Vision for Autonomous Flight and Landing on a Winged Drone (Marchei, Polito/EPFL) | 2024 | Fixed-wing neuromorphic landing |
 
 ## Topic → Paper Mapping (LR structure ke liye)
 
@@ -30,11 +34,12 @@ MTech project ka literature review. Papers `papers/` folder me organized hain, s
 - **Neuromorphic chips (ASIC)**: 10 (Loihi), 11 (TrueNorth), 04 (SpiNNaker2)
 - **FPGA implementations**: 01, 06 (deployment), 05
 - **UAV control with SNN**: 07, 09, 08
+- **Fixed-wing UAV (event-driven / vision) control**: 15, 12, 13, 14
 - **Frameworks/tools**: 06 (SpikingJelly)
 
 ## Summaries
 
-Har paper ka detailed summary `summaries/` me hai (01_*.md to 11_*.md) — Overview, Key Points, Relevance to Our Project, aur Key Takeaway ke saath.
+Har paper ka detailed summary `summaries/` me hai (01_*.md to 15_*.md) — Overview, Key Points, Relevance to Our Project, aur Key Takeaway ke saath.
 
 ## Comparative Table
 

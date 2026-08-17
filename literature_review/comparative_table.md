@@ -29,15 +29,18 @@ Har entry: **paper → hardware → task → key metrics → SNN method**. Ye ta
 
 ## 3. SNN-Based UAV / Control Systems
 
-| Work | Year | Hardware | Task | SNN Architecture | Training | Result |
-|------|------|----------|------|-----------------|----------|--------|
-| **Dupeyroux et al.** (optic-flow landing) | 2021 | Loihi | MAV landing | SNN optic-flow | Evolutionary | Real drone landing |
-| **Stagsted et al.** (SNN PID) | 2020 | Loihi | UAV PID control | Spiking PID | — | Concept demo |
-| **Stroobants et al.** | 2024/25 | Teensy (→Loihi ready) | Quadrotor attitude est. + control | CUBA-LIF, modular (est + ctrl) | Imitation learning | 500 Hz, ~3° tracking error |
-| **Paredes-Vallés et al.** | 2024 | **Loihi** (onboard) | Full vision-to-control flight | 5-layer vision + control | Self-supervised + evolutionary | 200 Hz, **27 µJ/inference**, real flight |
-| **Xu et al.** (ANN→SNN control) | 2026 | Simulation | Continuous control analysis | Converted SNN | Conversion | Shows conversion fails in continuous control |
-| **Mengozzi et al.** | 2025 | Simulation | Quadrotor agile flight | PPO-trained SNN | RL (PPO) | +2.5% success, +40% speed |
-| **Ours** | 2025 | **FPGA** | **UAV control (4 PWM: aileron/elevator/rudder/throttle)** | **3-layer LIF, Q4.11, inference-only** | **Surrogate gradient** | RTL sim verified |
+| Work | Year | Platform | Hardware | Task | SNN Architecture | Training | Result |
+|------|------|----------|----------|------|-----------------|----------|--------|
+| **Dupeyroux et al.** (optic-flow landing) | 2021 | Rotary (MAV) | Loihi | MAV landing | SNN optic-flow | Evolutionary | Real drone landing |
+| **Stagsted et al.** (SNN PID) | 2020 | Rotary (UAV) | Loihi | UAV PID control | Spiking PID | — | Concept demo |
+| **Stroobants et al.** | 2024/25 | Rotary (Quadrotor) | Teensy (→Loihi ready) | Quadrotor attitude est. + control | CUBA-LIF, modular (est + ctrl) | Imitation learning | 500 Hz, ~3° tracking error |
+| **Paredes-Vallés et al.** | 2024 | Rotary (Drone) | **Loihi** (onboard) | Full vision-to-control flight | 5-layer vision + control | Self-supervised + evolutionary | 200 Hz, **27 µJ/inference**, real flight |
+| **Xu et al.** (ANN→SNN control) | 2026 | Rotary | Simulation | Continuous control analysis | Converted SNN | Conversion | Shows conversion fails in continuous control |
+| **Mengozzi et al.** | 2025 | Rotary (Quadrotor) | Simulation | Quadrotor agile flight | PPO-trained SNN | RL (PPO) | +2.5% success, +40% speed |
+| **Wüest et al.** | 2022 | **Fixed-wing** | Onboard CPU (GNSS+vision) | Vision-based precise fixed-wing flight | — (conventional vision) | — | 0.283 m accuracy (≈ RTK GNSS) |
+| **Marchei 2024 / Jeger et al. 2026** | 2024/26 | **Fixed-wing** | Raspberry Pi 5 (event OF) | Event-based altitude control + landing | — (conventional CV) | — | Altitude + landing @15 m/s, low-light OK |
+| **Coen et al.** | 2026 | **Fixed-wing** | Testbed (Triton2 EVS) | Event-camera in-flight data collection | — (first fixed-wing event cam) | — | HDR robustness (sun) vs frame cam |
+| **Ours** | 2025 | **Fixed-wing** | **FPGA** | **UAV control (4 PWM: aileron/elevator/rudder/throttle)** | **3-layer LIF, Q4.11, inference-only** | **Surrogate gradient** | RTL sim verified |
 
 ## 4. Our Positioning Summary
 
@@ -52,4 +55,4 @@ Har entry: **paper → hardware → task → key metrics → SNN method**. Ye ta
 
 ## 5. Research Gap (Final Statement)
 
-> FPGA par SNN implementation zyada tar **perception/classification** tasks ke liye hai; **SNN-based continuous control** (PWM/actuator commands) — especially **FPGA-deployed** — kafi kam explore hua hai. Neuromorphic UAV/drone control (TU Delft) Loihi jaise ASIC chips pe hai, jo cost/access me limited hain. **Ye thesis ek surrogate-gradient trained, Q4.11 quantized, FPGA-deployed LIF control SNN propose karta hai jo UAV control output (4 PWM: aileron/elevator/rudder/throttle) ko rate-coded spikes se generate karta hai — control domain me FPGA-SNN ka ek naya use-case.**
+> FPGA par SNN implementation zyada tar **perception/classification** tasks ke liye hai; **SNN-based continuous control** (PWM/actuator commands) — especially **FPGA-deployed** — kafi kam explore hua hai. Neuromorphic UAV/drone control (TU Delft) **rotary (quadrotor/MAV)** platforms pe Loihi jaise ASIC chips pe hai, jo cost/access me limited hain. Fixed-wing (event-driven) kaam (Jeger, Coen, Wüest) event camera + conventional CV ko embedded CPU pe use karta hai — **koi fixed-wing UAV control output spiking/neuromorphic FPGA se nahi banata**. **Ye thesis ek surrogate-gradient trained, Q4.11 quantized, FPGA-deployed LIF control SNN propose karta hai jo fixed-wing UAV control output (4 PWM: aileron/elevator/rudder/throttle) ko rate-coded spikes se generate karta hai — fixed-wing control domain me FPGA-SNN ka pehla use-case.**
